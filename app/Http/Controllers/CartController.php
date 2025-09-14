@@ -17,7 +17,8 @@ class CartController extends Controller
 
         return response()->json(
             [
-                "valor_total" => $this->cartService->calculateTaxes($request)
+                "valor_total" => $this->cartService
+                    ->calculateTaxes($request)
             ]
         );
     }
