@@ -53,9 +53,9 @@ class ProductsController extends Controller
 
     public function getProduct ($id)
     {
-        $product = array_filter($this->products['products'], function($product) use ($id) {
-            return $product["id"] === (int)$id;
-        });
+        $product = collect($this->products['products'])
+            ->where('id', $id)
+            ->first();
 
         return response()->json($product);
     }
