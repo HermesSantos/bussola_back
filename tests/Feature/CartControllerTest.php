@@ -14,7 +14,7 @@ class CartControllerTest extends TestCase
 
         $payload = [
             "produtos" => [
-                ["nome" => "Fone Bluetooth", "valor" => 100.00, "quantidade" => 2],
+                ["nome" => "Fone de Ouvido", "valor" => 100.00, "quantidade" => 2],
                 ["nome" => "Mouse Gamer", "valor" => 150.00, "quantidade" => 1]
             ],
             "metodo_pagamento" => "PIX",
@@ -35,7 +35,7 @@ class CartControllerTest extends TestCase
 
         $payload = [
             "produtos" => [
-                ["nome" => "Fone Bluetooth", "valor" => 100.00, "quantidade" => 2],
+                ["nome" => "Fone de Ouvido", "valor" => 100.00, "quantidade" => 2],
                 ["nome" => "Mouse Gamer", "valor" => 150.00, "quantidade" => 1]
             ],
             "metodo_pagamento" => "CARTAO_CREDITO",
@@ -56,7 +56,7 @@ class CartControllerTest extends TestCase
 
         $payload = [
             "produtos" => [
-                ["nome" => "Fone Bluetooth", "valor" => 100.00, "quantidade" => 2],
+                ["nome" => "Fone de Ouvido", "valor" => 100.00, "quantidade" => 2],
                 ["nome" => "Mouse Gamer", "valor" => 150.00, "quantidade" => 1]
             ],
             "metodo_pagamento" => "CARTAO_CREDITO",
@@ -70,5 +70,22 @@ class CartControllerTest extends TestCase
                 "valor_total" => 360.61
             ])
             ->assertStatus(200);
+    }
+
+    public function test_payload_data_is_wrong (): void {
+        $payload = [
+            "produtos" => [
+                [ "nome" => "Fone de Ouvido", "valor" => 10000000.00, "quantidade" => 2 ],
+                [ "nome" => "Mouse Gamer", "valor" => 150.00, "quantidade" => 1 ]
+            ],
+            "metodo_pagamento" => "CARTAO_CREDITO",
+            "parcelas" => 3
+        ];
+
+        $response = $this->post('api/calculate-cart-taxes', $payload);
+
+        $response
+            ->assertStatus(500);
+
     }
 }
