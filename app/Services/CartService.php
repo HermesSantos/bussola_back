@@ -18,7 +18,8 @@ class CartService
         }
 
         if($data['metodo_pagamento'] == 'CARTAO_CREDITO') {
-            return $this->creditCardPayment($amount, $data['parcelas']);
+            $parcelas = $data['parcelas'];
+            return $this->creditCardPayment($amount, $parcelas);
         }
     }
 
