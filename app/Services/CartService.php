@@ -9,6 +9,12 @@ class CartService
     private const TEN_PERCENT_DISCOUNT = 0.1;
     private const ONE_PERCENT_DISCOUNT = 0.01;
 
+    private $products;
+
+    public function __construct() {
+        $this->products = config('mock');
+    }
+
     public function calculateTaxes (CartRequest $data) {
 
         $amount = $this->calculateAmount($data);
@@ -35,6 +41,8 @@ class CartService
     }
 
     private function calculateAmount (CartRequest $data) {
+        $this->verifyRequest($data);
+        
         $amount = 0;
 
         foreach ($data['produtos'] as $product) {
@@ -42,5 +50,20 @@ class CartService
         }
 
         return $amount;
+    }
+    private function verifyRequest ($data) {
+        $mockProducts = collect(config('mock.products'))->keyBy('name');
+        
+        foreach($data['produtos'] as $item) {
+            $sla = $mockProducts[$item['nome']] ?? null;
+
+            if(!$sla) {
+                throw new \Exception('Um ou mais produtos do carrinho não foram encontrados.');
+            }
+
+            if($sla['price'] != $item['valor']) {
+                throw new \Exception('Valor(es) no produto ' . $item['nome'] . ' é(são) inválido(s).');
+            }
+        }
     }
 }
